@@ -1,7 +1,9 @@
 package responses
 
 type Depth struct {
+	Success  int `json:"success"`
 	PairData map[string]PData
+	Error    string `json:"error"`
 }
 
 type PData struct {

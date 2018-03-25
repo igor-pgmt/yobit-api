@@ -8,7 +8,7 @@ Public API:
   - [X] info
   - [X] depth
   - [ ] ticker
-  - [ ] trades
+  - [X] trades
 
 Trade API:
   - [X] getInfo
@@ -129,7 +129,15 @@ func main() {
 	fmt.Println("Trade API: Order Info", orderInfo)
 
 	fmt.Println("/---------------------------------/")
-	
+
+	trades, err := client.Public.Trades(pair)
+	if err != nil {
+		fmt.Println("Cannot load trades")
+	}
+
+	fmt.Println("Public API: Trades", pair, trades)
+
+	fmt.Println("/---------------------------------/")
 }
 ```
 

@@ -32,7 +32,8 @@ func (api *API) prepareRequest(method string, parameters []string) (*http.Reques
 	for _, paramName := range parameters {
 		apiLink += "/" + paramName
 	}
-	apiLink += "?limit=2000"
+	// TODO: next line is a hardcode. Need to place this parameter into request structs.
+	apiLink += "?limit=20"
 	req, err := http.NewRequest("POST", apiLink, nil)
 	settings.Check("Public API.prepareRequest() Creating request", err)
 

@@ -2,7 +2,6 @@ package trade
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/fatih/structs"
@@ -53,7 +52,6 @@ func (api *API) ActiveOrders(t *requests.ActiveOrdersSettings) (responses.Active
 	body, err := ioutil.ReadAll(resp.Body)
 	settings.Check("Trade API.ActiveOrders() Reading response body", err)
 	defer resp.Body.Close()
-	fmt.Println("BODY", string(body))
 
 	activeOrders := responses.NewActiveOrders()
 	err = json.Unmarshal(body, &activeOrders)
@@ -75,7 +73,6 @@ func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, e
 	body, err := ioutil.ReadAll(resp.Body)
 	settings.Check("Trade API.OrderInfo() Reading response body", err)
 	defer resp.Body.Close()
-	fmt.Println("BODY", string(body))
 
 	orderInfo := responses.NewOrderInfo()
 	err = json.Unmarshal(body, &orderInfo)
