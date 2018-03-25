@@ -23,24 +23,18 @@ func NewAPI() *API {
 
 func (api *API) sendRequest(method string, parameters map[string]interface{}) (*http.Response, error) {
 
-	req, _ := api.prepareRequest(method, parameters)
+	req, err := api.prepareRequest(method, parameters)
+	settings.Check("Trade API.sendRequest() Preparing request", err)
+
 	resp, err := api.sendPost(req)
-
-	return resp, err
-}
-
-func (api *API) sendPost(req *http.Request) (*http.Response, error) {
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	settings.Check(err)
+	settings.Check("Trade API.sendRequest() Sending POST request", err)
 
 	return resp, err
 }
 
 func (api *API) prepareRequest(method string, parameters map[string]interface{}) (*http.Request, error) {
 	nonce, err := settings.GetNonce(settings.Key)
-	settings.Check(err)
+	settings.Check("Trade API.prepareRequest() Getting nonce", err)
 
 	values := url.Values{
 		"method": []string{method},
@@ -64,10 +58,20 @@ func (api *API) prepareRequest(method string, parameters map[string]interface{})
 	sign.Write([]byte(requestString))
 
 	req, err := http.NewRequest("POST", settings.TradeApiLink, strings.NewReader(requestString))
+	settings.Check("Trade API.prepareRequest() Creating request", err)
 	req.Header.Add("Key", settings.Key)
 	req.Header.Add("Sign", hex.EncodeToString(sign.Sum(nil)))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	return req, err
 
+}
+
+func (api *API) sendPost(req *http.Request) (*http.Response, error) {
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	settings.Check("Trade API.sendPost() Doing request", err)
+
+	return resp, err
 }

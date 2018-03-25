@@ -15,13 +15,14 @@ import (
 func (api *API) GetInfo() (responses.GetInfo, error) {
 	balance := responses.NewBalance()
 	resp, err := api.sendRequest("getInfo", map[string]interface{}{})
-	settings.Check(err)
+	settings.Check("Trade API.GetInfo() Getting response", err)
+
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check(err)
+	settings.Check("Trade API.GetInfo() Reading response body", err)
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &balance)
-	settings.Check(err)
+	settings.Check("Trade API.Info() Unmarshalling response body", err)
 
 	return balance, err
 }
@@ -31,14 +32,14 @@ func (api *API) Trade(t *requests.TradeSettings) (responses.Trade, error) {
 	trade := responses.NewTrade()
 	tradeMap := structs.Map(t)
 	resp, err := api.sendRequest("Trade", tradeMap)
-	settings.Check(err)
+	settings.Check("Trade API.Trade() Getting response", err)
 
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check(err)
+	settings.Check("Trade API.GetInfo() Reading response body", err)
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &trade)
-	settings.Check(err)
+	settings.Check("Trade API.Info() Unmarshalling response body", err)
 
 	return trade, err
 }
@@ -48,15 +49,15 @@ func (api *API) ActiveOrders(t *requests.ActiveOrdersSettings) (responses.Active
 	activeOrders := responses.NewActiveOrders()
 	activeOrdersMap := structs.Map(t)
 	resp, err := api.sendRequest("ActiveOrders", activeOrdersMap)
-	settings.Check(err)
+	settings.Check("Trade API.Trade() Getting response", err)
 
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check(err)
+	settings.Check("Trade API.GetInfo() Reading response body", err)
 	defer resp.Body.Close()
 	fmt.Println("BODY", string(body))
 
 	err = json.Unmarshal(body, &activeOrders)
-	settings.Check(err)
+	settings.Check("Trade API.Info() Unmarshalling response body", err)
 
 	return activeOrders, err
 }

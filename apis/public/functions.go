@@ -8,17 +8,17 @@ import (
 	"github.com/igor-pgmt/yobit-api/settings"
 )
 
-// Info shows information about server time and active pairs.
+// Info returns information about server time and active pairs.
 func (api *API) Info() (responses.Info, error) {
 	info := responses.NewInfo()
 	resp, err := api.sendRequest("info", []string{})
-	settings.Check(err)
+	settings.Check("Public API.Info() Getting response", err)
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check(err)
+	settings.Check("Public API.Info() Reading response body", err)
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &info)
-	settings.Check(err)
+	settings.Check("Public API.Info() Unmarshalling response body", err)
 
 	return info, err
 }
@@ -29,14 +29,13 @@ func (api *API) Depth(pair string) (responses.Depth, error) {
 	fullData := make(map[string]responses.PData)
 
 	resp, err := api.sendRequest("depth", []string{pair})
-	settings.Check(err)
+	settings.Check("Public API.Depth() Getting response", err)
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check(err)
+	settings.Check("Public API.Depth() Reading response body", err)
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &fullData)
-
-	settings.Check(err)
+	settings.Check("Public API.Depth() Unmarshalling response body", err)
 	depth.PairData = fullData
 
 	return depth, err
