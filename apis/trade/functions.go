@@ -22,7 +22,7 @@ func (api *API) GetInfo() (responses.GetInfo, error) {
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &balance)
-	settings.Check("Trade API.Info() Unmarshalling response body", err)
+	settings.Check("Trade API.GetInfo() Unmarshalling response body", err)
 
 	return balance, err
 }
@@ -35,29 +35,51 @@ func (api *API) Trade(t *requests.TradeSettings) (responses.Trade, error) {
 	settings.Check("Trade API.Trade() Getting response", err)
 
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.GetInfo() Reading response body", err)
+	settings.Check("Trade API.Trade() Reading response body", err)
 	defer resp.Body.Close()
 
 	err = json.Unmarshal(body, &trade)
-	settings.Check("Trade API.Info() Unmarshalling response body", err)
+	settings.Check("Trade API.Trade() Unmarshalling response body", err)
 
 	return trade, err
 }
 
 // ActiveOrders returns list of user's active orders
 func (api *API) ActiveOrders(t *requests.ActiveOrdersSettings) (responses.ActiveOrders, error) {
-	activeOrders := responses.NewActiveOrders()
 	activeOrdersMap := structs.Map(t)
 	resp, err := api.sendRequest("ActiveOrders", activeOrdersMap)
-	settings.Check("Trade API.Trade() Getting response", err)
+	settings.Check("Trade API.ActiveOrders() Getting response", err)
 
 	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.GetInfo() Reading response body", err)
+	settings.Check("Trade API.ActiveOrders() Reading response body", err)
 	defer resp.Body.Close()
 	fmt.Println("BODY", string(body))
 
+	activeOrders := responses.NewActiveOrders()
 	err = json.Unmarshal(body, &activeOrders)
-	settings.Check("Trade API.Info() Unmarshalling response body", err)
+	settings.Check("Trade API.ActiveOrders() Unmarshalling response body", err)
 
 	return activeOrders, err
+}
+
+// OrderInfo returns detailed information about the chosen order
+func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, error) {
+	orderInfoMap := structs.Map(t)
+	// TODO: 2 next lines seem not very good. Need to find a way to convert struct's variables into needed names
+	orderInfoMap["order_id"] = orderInfoMap["OrderID"]
+	delete(orderInfoMap, "OrderID")
+
+	resp, err := api.sendRequest("OrderInfo", orderInfoMap)
+	settings.Check("Trade API.OrderInfo() Getting response", err)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	settings.Check("Trade API.OrderInfo() Reading response body", err)
+	defer resp.Body.Close()
+	fmt.Println("BODY", string(body))
+
+	orderInfo := responses.NewOrderInfo()
+	err = json.Unmarshal(body, &orderInfo)
+	settings.Check("Trade API.OrderInfo() Unmarshalling response body", err)
+
+	return orderInfo, err
 }

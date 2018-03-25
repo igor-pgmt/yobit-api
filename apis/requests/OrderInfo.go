@@ -1,5 +1,5 @@
 package requests
 
 type OrderInfoSettings struct {
-	OrderID int // пара (пример: ltc_btc)
+	OrderID int // ID ордера (пример: 100025362)
 }

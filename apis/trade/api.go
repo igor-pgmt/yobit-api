@@ -44,11 +44,16 @@ func (api *API) prepareRequest(method string, parameters map[string]interface{})
 	for paramName, paramValue := range parameters {
 
 		paramName = strings.ToLower(paramName)
-		if s, ok := paramValue.(string); ok {
+
+		switch s := paramValue.(type) {
+		case string:
 			values.Add(paramName, s)
-		} else {
+		case float64:
 			values.Add(paramName, strconv.FormatFloat(paramValue.(float64), 'f', -1, 64))
+		case int:
+			values.Add(paramName, strconv.Itoa(paramValue.(int)))
 		}
+
 	}
 
 	requestString := values.Encode()

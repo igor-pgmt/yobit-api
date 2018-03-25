@@ -14,7 +14,7 @@ Trade API:
   - [X] getInfo
   - [X] ActiveOrders
   - [X] Trade
-  - [ ] OrderInfo
+  - [X] OrderInfo
   - [ ] CancelOrder
   - [ ] TradeHistory
   - [ ] GetDepositAddress
@@ -100,6 +100,7 @@ func main() {
 		fmt.Println("Cannot load ActiveOrders")
 	}
 	fmt.Println("Trade API: ActiveOrders", activeOrders)
+
 	fmt.Println("/---------------------------------/")
 
 	ts := &requests.TradeSettings{
@@ -114,8 +115,21 @@ func main() {
 		fmt.Println("Cannot make Trade")
 	}
 	fmt.Println("Trade API: Trade", trade)
+
 	fmt.Println("/---------------------------------/")
 
+	oi := &requests.OrderInfoSettings{
+		OrderID: 123456789, // <--- YOUR ORDER ID HERE
+	}
+
+	orderInfo, err := client.Trade.OrderInfo(oi)
+	if err != nil {
+		fmt.Println("Cannot load OrderInfo")
+	}
+	fmt.Println("Trade API: Order Info", orderInfo)
+
+	fmt.Println("/---------------------------------/")
+	
 }
 ```
 
