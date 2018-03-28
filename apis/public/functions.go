@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
 	"github.com/igor-pgmt/yobit-api/responses"
@@ -37,6 +38,7 @@ func (api *API) Depth(pair string) (responses.Depth, error) {
 	settings.Check("Public API.Depth() Unmarshalling response body", err)
 	if err != nil {
 		err = json.Unmarshal(body, &depth)
+		fmt.Println("BODY:", string(body))
 		settings.Check("Public API.Depth() Unmarshalling response error", err)
 	}
 

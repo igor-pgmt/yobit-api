@@ -7,8 +7,7 @@ import (
 )
 
 // API is the Public API that included in the main client.
-type API struct {
-}
+type API struct{}
 
 // NewAPI creates and returns the Public API to the main client.
 func NewAPI() *API {
@@ -33,7 +32,7 @@ func (api *API) prepareRequest(method string, parameters []string) (*http.Reques
 		apiLink += "/" + paramName
 	}
 	// TODO: next line is a hardcode. Need to place this parameter into request structs.
-	apiLink += "?limit=20"
+	apiLink += "?limit=2000"
 	req, err := http.NewRequest("POST", apiLink, nil)
 	settings.Check("Public API.prepareRequest() Creating request", err)
 
