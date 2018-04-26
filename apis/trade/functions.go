@@ -81,7 +81,7 @@ func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, e
 	return orderInfo, err
 }
 
-// CancelOrder returns detailed information about the chosen order
+// CancelOrder cancells the chosen order
 func (api *API) CancelOrder(t *requests.CancelOrderSettings) (responses.CancelOrder, error) {
 	cancelOrderMap := structs.Map(t)
 	// TODO: 2 next lines seem not very good. Need to find a way to convert struct's variables into needed names
