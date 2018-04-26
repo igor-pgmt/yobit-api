@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -14,13 +15,17 @@ import (
 )
 
 // API is the Trade API that included in the main client
-type API struct{}
+type API struct {
+	VirtualNonce bool // is for saving to file or not (false = to file by edfault)
+	Nonce        int  // current nonce parameter
+}
 
 // NewAPI creates and returns the Trade API to the main client
 func NewAPI() *API {
 	return &API{}
 }
 
+// sendRequest porepares and sends request to server by calling objective functions
 func (api *API) sendRequest(method string, parameters map[string]interface{}) (*http.Response, error) {
 
 	req, err := api.prepareRequest(method, parameters)
@@ -32,8 +37,9 @@ func (api *API) sendRequest(method string, parameters map[string]interface{}) (*
 	return resp, err
 }
 
+// prepareRequest creates link and prepares request to send
 func (api *API) prepareRequest(method string, parameters map[string]interface{}) (*http.Request, error) {
-	nonce, err := settings.GetNonce(settings.Key)
+	nonce, err := api.GetNonce(settings.Key)
 	settings.Check("Trade API.prepareRequest() Getting nonce", err)
 
 	values := url.Values{
@@ -69,9 +75,9 @@ func (api *API) prepareRequest(method string, parameters map[string]interface{})
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	return req, err
-
 }
 
+// sendPost sends POST request to the API server
 func (api *API) sendPost(req *http.Request) (*http.Response, error) {
 
 	client := &http.Client{}
@@ -79,4 +85,26 @@ func (api *API) sendPost(req *http.Request) (*http.Response, error) {
 	settings.Check("Trade API.sendPost() Doing request", err)
 
 	return resp, err
+}
+
+// GetNonce is a maintenance function for getting and storing nonce counter
+func (api *API) GetNonce(Key string) (int, error) {
+	nonceFileName := "nonce." + Key[0:8] + ".txt"
+	if api.VirtualNonce != true {
+		nonceBytes, err := ioutil.ReadFile(nonceFileName)
+		if err == nil {
+			api.Nonce, _ = strconv.Atoi(string(nonceBytes))
+		}
+	}
+	api.Nonce++
+	err := api.WriteNonce(api.Nonce, nonceFileName)
+	settings.Check("WriteNonce", err)
+	return api.Nonce, err
+}
+
+// WriteNonce writes nonce to the file
+func (api *API) WriteNonce(nonce int, nonceFileName string) (err error) {
+	err = ioutil.WriteFile(nonceFileName, []byte(strconv.Itoa(nonce)), 0644)
+	settings.Check("Get Nonce write file error", err)
+	return
 }

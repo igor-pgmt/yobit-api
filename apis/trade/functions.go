@@ -80,3 +80,24 @@ func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, e
 
 	return orderInfo, err
 }
+
+// CancelOrder returns detailed information about the chosen order
+func (api *API) CancelOrder(t *requests.CancelOrderSettings) (responses.CancelOrder, error) {
+	cancelOrderMap := structs.Map(t)
+	// TODO: 2 next lines seem not very good. Need to find a way to convert struct's variables into needed names
+	cancelOrderMap["order_id"] = cancelOrderMap["OrderID"]
+	delete(cancelOrderMap, "OrderID")
+
+	resp, err := api.sendRequest("CancelOrder", cancelOrderMap)
+	settings.Check("Trade API.CancelOrder() Getting response", err)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	settings.Check("Trade API.CancelOrder() Reading response body", err)
+	defer resp.Body.Close()
+
+	cancelOrder := responses.NewCancelOrder()
+	err = json.Unmarshal(body, &cancelOrder)
+	settings.Check("Trade API.CancelOrder() Unmarshalling response body", err)
+
+	return cancelOrder, err
+}

@@ -2,11 +2,9 @@ package settings
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"runtime/debug"
-	"strconv"
 )
 
 // Place your API keys at your main.go
@@ -42,18 +40,3 @@ func writeToLog(msg string, err error) {
 		log.Fatal(err)
 	}
 }
-
-// GetNonce is a maintenance function for storing counter
-func GetNonce(Key string) (nonce int, err error) {
-	nonceFileName := "nonce." + Key[0:8] + ".txt"
-	nonceBytes, err := ioutil.ReadFile(nonceFileName)
-	if err == nil {
-		nonce, _ = strconv.Atoi(string(nonceBytes))
-	}
-	nonce++
-	err = ioutil.WriteFile(nonceFileName, []byte(strconv.Itoa(nonce)), 0644)
-	Check("Get Nonce write file error", err)
-
-	return
-}
-

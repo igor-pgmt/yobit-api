@@ -15,7 +15,7 @@ Trade API:
   - [X] ActiveOrders
   - [X] Trade
   - [X] OrderInfo
-  - [ ] CancelOrder
+  - [X] CancelOrder
   - [ ] TradeHistory
   - [ ] GetDepositAddress
   - [ ] WithdrawCoinsToAddress
@@ -136,6 +136,18 @@ func main() {
 		fmt.Println("Cannot load OrderInfo")
 	}
 	fmt.Println("Trade API: Order Info", orderInfo)
+
+	fmt.Println("/---------------------------------/")
+
+	co := &requests.CancelOrderSettings{
+		OrderID: 123456789, // <--- YOUR ORDER ID HERE
+	}
+
+	cancelOrder, err := client.Trade.CancelOrder(co)
+	if err != nil {
+		fmt.Println("Cannot load OrderInfo")
+	}
+	fmt.Println("Trade API: CancelOrder", cancelOrder)
 
 	fmt.Println("/---------------------------------/")
 

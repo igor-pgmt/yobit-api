@@ -37,6 +37,7 @@ func Separate(t Trades, pair string) ([]TradeData, []TradeData) {
 	return asks, bids
 }
 
+// GetPriceBefore returns first action price ??
 func GetPriceBefore(tds []TradeData, before int64) (price float64) {
 	var currentTimeVal int64
 	for _, val := range tds {
