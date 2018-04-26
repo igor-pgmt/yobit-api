@@ -7,7 +7,7 @@ This wrapper allows to trade on [Yobit.io](https://Yobit.io)
 Public API:
   - [X] info
   - [X] depth
-  - [ ] ticker
+  - [X] ticker
   - [X] trades
 
 Trade API:
@@ -69,6 +69,15 @@ func main() {
 	}
 
 	fmt.Println("Public API: Info", pair, info.Pairs[pair])
+
+	fmt.Println("/---------------------------------/")
+
+	ticker, err := client.Public.Ticker(pair)
+	if err != nil {
+		fmt.Println("Cannot load ticker")
+	}
+	tdata := ticker.PairData[pair]
+	fmt.Println("Public API: Ticker", pair, tdata)
 
 	fmt.Println("/---------------------------------/")
 
