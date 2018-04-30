@@ -35,8 +35,29 @@ import  "github.com/igor-pgmt/yobit-api/apis/requests" // Requests settings for 
 ```
 Set Your keys:
 ```go
-	settings.Key = "0F353F10C44250F49C499ACDD0D5FDD3"
-	settings.Secret = "2c0019b0578b2059705830f9b3a527a1"
+	settings.Key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+	settings.Secret = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+```
+Create new client:
+```go
+	client := trader.NewClient()
+```
+Set settings for needed operation:
+```go
+	ts := &requests.TradeSettings{
+		Pair:   pair,
+		Type:   "sell",       // or "buy"
+		Rate:   0.00001339,   // e.g. desired "price"
+		Amount: 444.44444444, // amount of your currency
+	}
+```
+Run the operation with the settings ans see the result:
+```go
+	trade, err := client.Trade.Trade(ts)
+	if err != nil {
+		fmt.Println("Cannot make Trade")
+	}
+	fmt.Println("Trade API: Trade", trade)
 ```
 
 ### Examples
