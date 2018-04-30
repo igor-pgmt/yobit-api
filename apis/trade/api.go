@@ -57,46 +57,6 @@ func (api *API) prepareRequest(values *url.Values) (*http.Request, error) {
 	return req, err
 }
 
-// // prepareRequest creates link and prepares request to send
-// func (api *API) prepareRequest(method string, parameters map[string]interface{}) (*http.Request, error) {
-// 	nonce, err := api.GetNonce(settings.Key)
-// 	settings.Check("Trade API.prepareRequest() Getting nonce", err)
-
-// 	values := url.Values{
-// 		"method": []string{method},
-// 		"nonce":  []string{strconv.Itoa(nonce)},
-// 	}
-
-// 	for paramName, paramValue := range parameters {
-
-// 		paramName = strings.ToLower(paramName)
-
-// 		switch s := paramValue.(type) {
-// 		case string:
-// 			values.Add(paramName, s)
-// 		case float64:
-// 			values.Add(paramName, strconv.FormatFloat(paramValue.(float64), 'f', -1, 64))
-// 		case int:
-// 			values.Add(paramName, strconv.Itoa(paramValue.(int)))
-// 		}
-
-// 	}
-
-// 	requestString := values.Encode()
-// 	fmt.Println("requestString", requestString)
-
-// 	sign := hmac.New(sha512.New, []byte(settings.Secret))
-// 	sign.Write([]byte(requestString))
-
-// 	req, err := http.NewRequest("POST", settings.TradeApiLink, strings.NewReader(requestString))
-// 	settings.Check("Trade API.prepareRequest() Creating request", err)
-// 	req.Header.Add("Key", settings.Key)
-// 	req.Header.Add("Sign", hex.EncodeToString(sign.Sum(nil)))
-// 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-// 	return req, err
-// }
-
 // sendPost sends POST request to the API server
 func (api *API) sendPost(req *http.Request) (*http.Response, error) {
 
