@@ -17,10 +17,10 @@ Trade API:
   - [X] OrderInfo
   - [X] CancelOrder
   - [X] TradeHistory
-  - [ ] GetDepositAddress
-  - [ ] WithdrawCoinsToAddress
-  - [ ] CreateYobicode
-  - [ ] RedeemYobicode
+  - [X] GetDepositAddress
+  - [X] WithdrawCoinsToAddress
+  - [X] CreateYobicode
+  - [X] RedeemYobicode
 
 ### How to use
 Download the repository from github to your src folder:
@@ -153,11 +153,11 @@ func main() {
 
 	fmt.Println("/---------------------------------/")
 
-	oi := &requests.OrderInfoSettings{
+	ois := &requests.OrderInfoSettings{
 		OrderID: 123456789, // <--- YOUR ORDER ID HERE
 	}
 
-	orderInfo, err := client.Trade.OrderInfo(oi)
+	orderInfo, err := client.Trade.OrderInfo(ois)
 	if err != nil {
 		fmt.Println("Cannot load OrderInfo")
 	}
@@ -165,11 +165,11 @@ func main() {
 
 	fmt.Println("/---------------------------------/")
 
-	co := &requests.CancelOrderSettings{
+	cos := &requests.CancelOrderSettings{
 		OrderID: 123456789, // <--- YOUR ORDER ID HERE
 	}
 
-	cancelOrder, err := client.Trade.CancelOrder(co)
+	cancelOrder, err := client.Trade.CancelOrder(cos)
 	if err != nil {
 		fmt.Println("Cannot load OrderInfo")
 	}
@@ -177,18 +177,68 @@ func main() {
 
 	fmt.Println("/---------------------------------/")
 
-	trades, err := client.Public.Trades(pair)
-	if err != nil {
-		fmt.Println("Cannot load trades")
+	ths := &requests.TradeHistorySettings{
+		Pair: pair,
 	}
 
-	fmt.Println("Public API: Trades", pair, trades)
+	TradeHistory, err := client.Trade.TradeHistory(ths)
+	if err != nil {
+		fmt.Println("Cannot load TradeHistory")
+	}
+	fmt.Println("Trade API: TradeHistory", TradeHistory)
+
+	fmt.Println("/---------------------------------/")
+
+	gdas := &requests.GetDepositAddressSettings{
+		CoinName: "BTC",
+	}
+
+	GetDepositAddress, err := client.Trade.GetDepositAddress(gdas)
+	if err != nil {
+		fmt.Println("Cannot load GetDepositAddress")
+	}
+	fmt.Println("Trade API: GetDepositAddress", GetDepositAddress)
+
+	fmt.Println("/---------------------------------/")
+
+	wctas := &requests.WithdrawCoinsToAddressSettings{
+		CoinName: "BTC",
+		Amount:   1.00001023,
+		Address:  "addr", // <<-- SET ADDRESS HERE
+	}
+
+	WithdrawCoinsToAddress, err := client.Trade.WithdrawCoinsToAddress(wctas)
+	if err != nil {
+		fmt.Println("Cannot load WithdrawCoinsToAddress")
+	}
+	fmt.Println("Trade API: WithdrawCoinsToAddress", WithdrawCoinsToAddress)
+
+	fmt.Println("/---------------------------------/")
+
+	cys := &requests.CreateYobicodeSettings{
+		Currency: "BTC",
+		Amount:   1.00001023,
+	}
+
+	CreateYobicode, err := client.Trade.CreateYobicode(cys)
+	if err != nil {
+		fmt.Println("Cannot load CreateYobicode")
+	}
+	fmt.Println("Trade API: CreateYobicode", CreateYobicode)
+
+	fmt.Println("/---------------------------------/")
+
+	rys := &requests.RedeemYobicodeSettings{
+		Coupon: "YOBITUZ0HHSTB...OQX3H01BTC", // <<-- SET YOUR COUPON HERE
+	}
+
+	RedeemYobicode, err := client.Trade.RedeemYobicode(rys)
+	if err != nil {
+		fmt.Println("Cannot load RedeemYobicode")
+	}
+	fmt.Println("Trade API: RedeemYobicode", RedeemYobicode)
 
 	fmt.Println("/---------------------------------/")
 }
 ```
-
-###### Dependencies
-Converting structs into maps:
-[fatih/structs](github.com/fatih/structs)
 

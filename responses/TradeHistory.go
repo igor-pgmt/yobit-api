@@ -1,12 +1,12 @@
 package responses
 
 type TradeHistory struct {
-	Success uint8                     `json:"success"`
-	Return  map[int]map[string]THData `json:"return"`
-	Error   string                    `json:"error"`
+	Success uint8                       `json:"success"`
+	Return  map[int]map[string]THReturn `json:"return"`
+	Error   string                      `json:"error"`
 }
 
-type THData struct {
+type THReturn struct {
 	Pair        string  `json:"pair"`          // pair
 	Type        string  `json:"type"`          // transaction type
 	Amount      float64 `json:"amount"`        // amount
@@ -18,6 +18,6 @@ type THData struct {
 
 func NewTradeHistory() TradeHistory {
 	tradeHistory := TradeHistory{}
-	tradeHistory.Return = make(map[int]map[string]THData)
+	tradeHistory.Return = make(map[int]map[string]THReturn)
 	return tradeHistory
 }
