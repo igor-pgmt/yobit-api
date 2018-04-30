@@ -16,7 +16,7 @@ Trade API:
   - [X] Trade
   - [X] OrderInfo
   - [X] CancelOrder
-  - [ ] TradeHistory
+  - [X] TradeHistory
   - [ ] GetDepositAddress
   - [ ] WithdrawCoinsToAddress
   - [ ] CreateYobicode
@@ -63,30 +63,56 @@ func main() {
 	// Public API
 
 	fmt.Println("/---------------------------------/")
+	
 	info, err := client.Public.Info()
 	if err != nil {
 		fmt.Println("Cannot load info")
 	}
 
-	fmt.Println("Public API: Info", pair, info.Pairs[pair])
+	fmt.Println("Public API: Info", pair, info.Pairs)       // all the pairs
+	fmt.Println("Public API: Info", pair, info.Pairs[pair]) // current pair
 
 	fmt.Println("/---------------------------------/")
 
-	ticker, err := client.Public.Ticker(pair)
+	tis := &requests.TickerSettings{
+		Pair: pair,
+	}
+
+	ticker, err := client.Public.Ticker(tis)
 	if err != nil {
 		fmt.Println("Cannot load ticker")
 	}
 	tdata := ticker.PairData[pair]
+
 	fmt.Println("Public API: Ticker", pair, tdata)
 
 	fmt.Println("/---------------------------------/")
 
-	depth, err := client.Public.Depth(pair)
+	des := &requests.DepthSettings{
+		Pair: pair,
+	}
+
+	depth, err := client.Public.Depth(des)
 	if err != nil {
 		fmt.Println("Cannot load depth")
 	}
-	data := depth.PairData[pair].Asks[:5]
+	data := depth.PairData[pair].Asks[:5] // show just five orders
+
 	fmt.Println("Public API: Depth", pair, data)
+
+	fmt.Println("/---------------------------------/")
+
+	tss := &requests.TradesSettings{
+		Pair: pair,
+	}
+
+	trades, err := client.Public.Trades(tss)
+	if err != nil {
+		fmt.Println("Cannot load trades")
+	}
+	tradesData := trades.PairData[pair][:5] // show just five transactions
+
+	fmt.Println("Public API: Trades", pair, tradesData)
 
 	fmt.Println("/---------------------------------/")
 

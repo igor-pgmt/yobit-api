@@ -7,15 +7,15 @@ type GetInfo struct {
 }
 
 type InfoReturn struct {
-	Rights           InfoReturnRight    `json:"rights"`
-	Funds            map[string]float64 `json:"funds"`
-	FundsInclOrders  map[string]float64 `json:"funds_incl_orders"`
-	TransactionCount int64              `json:"transaction_count"`
-	OpenOrders       int64              `json:"open_orders"`
-	ServerTime       uint64             `json:"server_time"`
+	Funds            map[string]float64 `json:"funds"`             // available account balance (does not include money on open orders)
+	FundsInclOrders  map[string]float64 `json:"funds_incl_orders"` // available account balance (include money on open orders)
+	Rights           InfoReturnRights   `json:"rights"`            // priviledges of key. withdraw is not used (reserved)
+	TransactionCount int64              `json:"transaction_count"` // always 0 (outdated)
+	OpenOrders       int64              `json:"open_orders"`       // always 0 (outdated)
+	ServerTime       uint64             `json:"server_time"`       // server time
 }
 
-type InfoReturnRight struct {
+type InfoReturnRights struct {
 	Info     int64 `json:"info"`
 	Trade    int64 `json:"trade"`
 	Deposit  int64 `json:"deposit"`

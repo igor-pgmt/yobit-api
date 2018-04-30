@@ -1,25 +1,23 @@
 package responses
 
 type Trades struct {
-	Success  int                   `json:"success"`
-	PairData map[string]TradeDatas `json:"return"`
-	Error    string                `json:"error"`
+	Success  int                    `json:"success"`
+	PairData map[string][]TradeData `json:"return"`
+	Error    string                 `json:"error"`
 }
 
-type TradeDatas []TradeData
-
 type TradeData struct {
-	Type      string  `json:"type"`      // ask - продажа, bid - покупка
-	Price     float64 `json:"price"`     // цена покупки/продажи
-	Amount    float64 `json:"amount"`    // количество
-	Tid       uint    `json:"tid"`       // идентификатор сделки
-	Timestamp int64   `json:"timestamp"` // время сделки
+	Type      string  `json:"type"`      // ask - sell, bid - buy
+	Price     float64 `json:"price"`     // buying / selling price
+	Amount    float64 `json:"amount"`    // amount
+	Tid       uint    `json:"tid"`       // transaction id
+	Timestamp int64   `json:"timestamp"` // transaction timestamp
 }
 
 // NewTrades returns new structure for Trade response
 func NewTrades() Trades {
 	trades := Trades{}
-	trades.PairData = make(map[string]TradeDatas)
+	trades.PairData = make(map[string][]TradeData)
 	return trades
 }
 
@@ -37,7 +35,7 @@ func Separate(t Trades, pair string) ([]TradeData, []TradeData) {
 	return asks, bids
 }
 
-// GetPriceBefore returns first action price ??
+// GetPriceBefore returns first action price before specified timestamp
 func GetPriceBefore(tds []TradeData, before int64) (price float64) {
 	var currentTimeVal int64
 	for _, val := range tds {

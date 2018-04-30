@@ -2,9 +2,7 @@ package trade
 
 import (
 	"encoding/json"
-	"io/ioutil"
 
-	"github.com/fatih/structs"
 	"github.com/igor-pgmt/yobit-api/apis/requests"
 	"github.com/igor-pgmt/yobit-api/responses"
 	"github.com/igor-pgmt/yobit-api/settings"
@@ -12,14 +10,13 @@ import (
 
 // GetInfo shows info about account's balance
 func (api *API) GetInfo() (responses.GetInfo, error) {
+
+	values := api.createLinkGetInfo()
+
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.Trade() Sending request", err)
+
 	balance := responses.NewBalance()
-	resp, err := api.sendRequest("getInfo", map[string]interface{}{})
-	settings.Check("Trade API.GetInfo() Getting response", err)
-
-	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.GetInfo() Reading response body", err)
-	defer resp.Body.Close()
-
 	err = json.Unmarshal(body, &balance)
 	settings.Check("Trade API.GetInfo() Unmarshalling response body", err)
 
@@ -28,15 +25,13 @@ func (api *API) GetInfo() (responses.GetInfo, error) {
 
 // Trade allows creating new orders
 func (api *API) Trade(t *requests.TradeSettings) (responses.Trade, error) {
+
+	values := api.createLinkTrade(t)
+
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.Trade() Sending request", err)
+
 	trade := responses.NewTrade()
-	tradeMap := structs.Map(t)
-	resp, err := api.sendRequest("Trade", tradeMap)
-	settings.Check("Trade API.Trade() Getting response", err)
-
-	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.Trade() Reading response body", err)
-	defer resp.Body.Close()
-
 	err = json.Unmarshal(body, &trade)
 	settings.Check("Trade API.Trade() Unmarshalling response body", err)
 
@@ -45,13 +40,11 @@ func (api *API) Trade(t *requests.TradeSettings) (responses.Trade, error) {
 
 // ActiveOrders returns list of user's active orders
 func (api *API) ActiveOrders(t *requests.ActiveOrdersSettings) (responses.ActiveOrders, error) {
-	activeOrdersMap := structs.Map(t)
-	resp, err := api.sendRequest("ActiveOrders", activeOrdersMap)
-	settings.Check("Trade API.ActiveOrders() Getting response", err)
 
-	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.ActiveOrders() Reading response body", err)
-	defer resp.Body.Close()
+	values := api.createLinkActiveOrders(t)
+
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.ActiveOrders() Sending request", err)
 
 	activeOrders := responses.NewActiveOrders()
 	err = json.Unmarshal(body, &activeOrders)
@@ -62,17 +55,11 @@ func (api *API) ActiveOrders(t *requests.ActiveOrdersSettings) (responses.Active
 
 // OrderInfo returns detailed information about the chosen order
 func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, error) {
-	orderInfoMap := structs.Map(t)
-	// TODO: 2 next lines seem not very good. Need to find a way to convert struct's variables into needed names
-	orderInfoMap["order_id"] = orderInfoMap["OrderID"]
-	delete(orderInfoMap, "OrderID")
 
-	resp, err := api.sendRequest("OrderInfo", orderInfoMap)
-	settings.Check("Trade API.OrderInfo() Getting response", err)
+	values := api.createLinkOrderInfo(t)
 
-	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.OrderInfo() Reading response body", err)
-	defer resp.Body.Close()
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.OrderInfo() Sending request", err)
 
 	orderInfo := responses.NewOrderInfo()
 	err = json.Unmarshal(body, &orderInfo)
@@ -83,21 +70,30 @@ func (api *API) OrderInfo(t *requests.OrderInfoSettings) (responses.OrderInfo, e
 
 // CancelOrder cancells the chosen order
 func (api *API) CancelOrder(t *requests.CancelOrderSettings) (responses.CancelOrder, error) {
-	cancelOrderMap := structs.Map(t)
-	// TODO: 2 next lines seem not very good. Need to find a way to convert struct's variables into needed names
-	cancelOrderMap["order_id"] = cancelOrderMap["OrderID"]
-	delete(cancelOrderMap, "OrderID")
 
-	resp, err := api.sendRequest("CancelOrder", cancelOrderMap)
-	settings.Check("Trade API.CancelOrder() Getting response", err)
+	values := api.createLinkCancelOrder(t)
 
-	body, err := ioutil.ReadAll(resp.Body)
-	settings.Check("Trade API.CancelOrder() Reading response body", err)
-	defer resp.Body.Close()
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.CancelOrder() Sending request", err)
 
 	cancelOrder := responses.NewCancelOrder()
 	err = json.Unmarshal(body, &cancelOrder)
 	settings.Check("Trade API.CancelOrder() Unmarshalling response body", err)
 
 	return cancelOrder, err
+}
+
+// TradeHistory returns transaction history
+func (api *API) TradeHistory(t *requests.TradeHistorySettings) (responses.TradeHistory, error) {
+
+	values := api.createLinkTradeHistory(t)
+
+	body, err := api.sendRequest(values)
+	settings.Check("Trade API.TradeHistory() Sending request", err)
+
+	tradeHistory := responses.NewTradeHistory()
+	err = json.Unmarshal(body, &tradeHistory)
+	settings.Check("Trade API.TradeHistory() Unmarshalling response body", err)
+
+	return tradeHistory, err
 }

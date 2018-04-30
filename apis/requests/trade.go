@@ -1,8 +1,8 @@
 package requests
 
 type TradeSettings struct {
-	Pair   string  // пара (пример: ltc_btc)
-	Type   string  // тип операции (пример: buy или sell)
-	Rate   float64 // курс, по которому необходимо купить или продать (значение: числовое)
-	Amount float64 // количество, которое необходимо купить или продать (значение: числовое)
+	Pair   string  `json:"pair"`   // pair (example: ltc_btc)
+	Type   string  `json:"type"`   // transaction type (example: buy or sell)
+	Rate   float64 `json:"rate"`   // exchange rate for buying or selling (value: numeral)
+	Amount float64 `json:"amount"` // amount needed for buying or selling (value: numeral)
 }

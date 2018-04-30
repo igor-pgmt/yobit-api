@@ -7,10 +7,10 @@ type Trade struct {
 }
 
 type TradeReturn struct {
-	Received float64            `json:"received"` // сколько валюты куплено/продано
-	Remains  float64            `json:"remains"`  // сколько валюты осталось купить/продать
-	OrderID  int                `json:"order_id"` // ID созданного ордера
-	Funds    map[string]float64 `json:"funds"`    // балансы, актуальные после запроса
+	Received float64            `json:"received"` // amount of currency bought / sold
+	Remains  float64            `json:"remains"`  // amount of currency to buy / to sell
+	OrderID  int                `json:"order_id"` // created order ID
+	Funds    map[string]float64 `json:"funds"`    // funds active after request
 }
 
 func NewTrade() Trade {

@@ -15,7 +15,7 @@ type TData struct {
 	Last    float64 `json:"last"`    // last transaction price
 	Buy     float64 `json:"buy"`     // buying price
 	Sell    float64 `json:"sell"`    // selling price
-	Updated float64 `json:"int"`     //  last cache upgrade
+	Updated int     `json:"updated"` // last cache upgrade
 }
 
 func NewTicker() Ticker {
