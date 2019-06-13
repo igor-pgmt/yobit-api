@@ -1,6 +1,6 @@
-# Golang wrapper for Yobit API
+# Golang client for Yobit API
 
-This wrapper allows to trade on [Yobit.io](https://Yobit.io)
+This client allows to trade on [Yobit.io](https://Yobit.io)
 
 ## Available methods:
 
